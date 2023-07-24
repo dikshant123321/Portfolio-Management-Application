@@ -1,0 +1,65 @@
+
+
+body{
+  background: hsla(180, 33%, 88%, 1);
+
+background: linear-gradient(90deg, hsla(180, 33%, 88%, 1) 0%, hsla(310, 76%, 82%, 1) 50%, hsla(256, 83%, 72%, 1) 100%);
+
+background: -moz-linear-gradient(90deg, hsla(180, 33%, 88%, 1) 0%, hsla(310, 76%, 82%, 1) 50%, hsla(256, 83%, 72%, 1) 100%);
+
+background: -webkit-linear-gradient(90deg, hsla(180, 33%, 88%, 1) 0%, hsla(310, 76%, 82%, 1) 50%, hsla(256, 83%, 72%, 1) 100%);
+
+filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#D7EBEB", endColorstr="#F4AFE9", GradientType=1 );
+}
+form{
+  margin: auto;
+  width:20%;
+  height:380px;
+  padding: 10px;
+  border: 1px solid gray;
+  background-color:white;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+  
+}
+input{
+  margin: auto;
+  display:block;
+  margin-top:20px;
+  padding:5px;
+  border: none;
+  outline: 0px;
+  border-bottom:2px solid black;
+  
+  
+}
+select{
+  width:70%;
+  margin: auto;
+  display:block;
+  margin-top:20px;
+ 
+  padding:5px;
+  border: none;
+  outline: 0px;
+  border-bottom:2px solid black;
+}
+#add{
+  
+  width:70%;
+  margin: auto;
+  margin-top:20px;
+  padding:5px;
+  border: 1px solid black;
+  border-radius:5px;
+  cursor: pointer;
+  background-color: #bbd0ff;
+ 
+}
+#add:hover{
+  font-size: 15px;
+  background-color: #b8c0ff;
+}
+h1{
+  margin: auto;
+  margin-left:50px;
+}
