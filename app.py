@@ -4,10 +4,14 @@ from flask_mysqldb import MySQL
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 # MySQL Configuration
-app.config['MYSQL_HOST'] = 'localhost'  
+# app.config['MYSQL_HOST'] = 'localhost'  
+# app.config['MYSQL_USER'] = 'root'  
+# app.config['MYSQL_PASSWORD'] = 'dikshant@1003' 
+# app.config['MYSQL_DB'] = 'project'
+app.config['MYSQL_HOST'] = 'containers-us-west-46.railway.app'  
 app.config['MYSQL_USER'] = 'root'  
-app.config['MYSQL_PASSWORD'] = 'dikshant@1003' 
-app.config['MYSQL_DB'] = 'project'  
+app.config['MYSQL_PASSWORD'] = 'rg2xnAS7e9BBQJA38BO0' 
+app.config['MYSQL_DB'] = 'railway'  
 
 mysql = MySQL(app)
 
