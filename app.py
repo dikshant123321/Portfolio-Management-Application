@@ -1,8 +1,8 @@
-from flask import Flask, jsonify, request,render_template
+from flask import Flask, jsonify, request
+from flask_cors import CORS
 from flask_mysqldb import MySQL
-
 app = Flask(__name__)
-
+CORS(app, resources={r"/*": {"origins": "*"}})
 # MySQL Configuration
 app.config['MYSQL_HOST'] = 'localhost'  
 app.config['MYSQL_USER'] = 'root'  
@@ -11,10 +11,7 @@ app.config['MYSQL_DB'] = 'project'
 
 mysql = MySQL(app)
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-    # return "Welcome to Project Prism!"
+
 
 # ========================================================PORTFOLIO_MANAGER====================================
 
@@ -43,8 +40,14 @@ def create_user_profile():
 @app.route('/get/portfolio_manager', methods=['GET'])
 def get_user_profiles():
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM portfolio_manager")
-    user_profiles = cur.fetchall()
+    cur.execute("SELECT pid, name, email, status, role, bio, startdate  FROM portfolio_manager")
+    user_profiles = []
+    columns = [col[0] for col in cur.description]  # Get column names from cursor description
+
+    for row in cur.fetchall():
+        user_profile_data = dict(zip(columns, row))
+        user_profiles.append(user_profile_data)
+
     cur.close()
     return jsonify(user_profiles)
 
@@ -54,10 +57,17 @@ def get_user_profiles():
 @app.route('/get/portfolio_manager/<int:managerId>', methods=['GET'])
 def get_user_profiles_By_managerId(managerId):
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM portfolio_manager  WHERE pid = %s", (managerId,))
-    user_profiles = cur.fetchall()
+    cur.execute("SELECT * FROM portfolio_manager WHERE pid = %s", (managerId,))
+    user_profile_data = cur.fetchone() 
+
+    if user_profile_data:
+        columns = [col[0] for col in cur.description]  
+        user_profile = dict(zip(columns, user_profile_data))
+        cur.close()
+        return jsonify(user_profile)
+
     cur.close()
-    return jsonify(user_profiles)
+    return jsonify({"message": "User profile not found"}), 404
 
 
 @app.route('/update/portfolio_manager/<int:managerId>', methods=['PUT'])
@@ -78,6 +88,17 @@ def update_user_profile_by_manager_id(managerId):
         return jsonify({"message": "User profile updated successfully"}), 200
     else:
         return jsonify({"error": "Name and email fields are required"}), 400
+
+
+
+@app.route('/delete/manager/<int:managerId>', methods=['DELETE'])
+def delete_manager_by_manager_id(managerId):
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM portfolio_manager WHERE pid = %s", (managerId,))
+    mysql.connection.commit()
+    cur.close()
+    return jsonify({"message": "manager deleted successfully"}), 200
+
 
 
 # ========================================================PROJECT====================================
@@ -102,13 +123,19 @@ def create_project():
 def get_projects():
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM project")
-    projects = cur.fetchall()
+    user_profiles = []
+    columns = [col[0] for col in cur.description]  # Get column names from cursor description
+
+    for row in cur.fetchall():
+        user_profile_data = dict(zip(columns, row))
+        user_profiles.append(user_profile_data)
+
     cur.close()
-    return jsonify(projects)
+    return jsonify(user_profiles)
 
 
 
-
+# 
 @app.route('/api/getProjects/<int:managerId>', methods=['GET'])
 def get_projects_by_managerid(managerId):
     cur = mysql.connection.cursor()
@@ -164,6 +191,15 @@ def update_project_by_project_id(projectId):
 
 
 
+@app.route('/delete/project/<int:projectId>', methods=['DELETE'])
+def delete_project_by_project_id(projectId):
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM project WHERE projectid = %s", (projectId,))
+    mysql.connection.commit()
+    cur.close()
+    return jsonify({"message": "Project deleted successfully"}), 200
+
+
 # ======================================================== TASK ====================================
 
 @app.route('/create/task', methods=['POST'])
@@ -187,10 +223,18 @@ def create_task():
 def get_tasks():
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM task")
-    tasks = cur.fetchall()
-    cur.close()
-    return jsonify(tasks)
+    user_profiles = []
+    columns = [col[0] for col in cur.description]  # Get column names from cursor description
 
+    for row in cur.fetchall():
+        user_profile_data = dict(zip(columns, row))
+        user_profiles.append(user_profile_data)
+
+    cur.close()
+    return jsonify(user_profiles)
+
+
+# SELECT * FROM task
 @app.route('/get/task/<int:taskId>', methods=['GET'])
 def get_task_By_taskId(taskId):
     cur = mysql.connection.cursor()
@@ -218,7 +262,13 @@ def update_task_by_task_id(taskId):
     else:
         return jsonify({"error": "fields are required"}), 400
 
-
+@app.route('/delete/task/<int:taskId>', methods=['DELETE'])
+def delete_task_by_task_id(taskId):
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM task WHERE taskid = %s", (taskId,))
+    mysql.connection.commit()
+    cur.close()
+    return jsonify({"message": "Task deleted successfully"}), 200
 
 # ======================================================== RESOURCE ====================================
 
@@ -242,9 +292,16 @@ def create_resource():
 def get_resource():
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM resource")
-    resource = cur.fetchall()
+    user_profiles = []
+    columns = [col[0] for col in cur.description]  # Get column names from cursor description
+
+    for row in cur.fetchall():
+        user_profile_data = dict(zip(columns, row))
+        user_profiles.append(user_profile_data)
+
     cur.close()
-    return jsonify(resource)
+    return jsonify(user_profiles)
+    
 
 
 @app.route('/get/resource/<int:resourceId>', methods=['GET'])
@@ -272,6 +329,15 @@ def update_resource_by_resource_id(resourceId):
         return jsonify({"message": "resource updated successfully"}), 200
     else:
         return jsonify({"error": "fields are required"}), 400
+
+@app.route('/delete/resource/<int:resourceId>', methods=['DELETE'])
+def delete_resource_by_resource_id(resourceId):
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM resource WHERE resourceid = %s", (resourceId,))
+    mysql.connection.commit()
+    cur.close()
+    return jsonify({"message": "Resource deleted successfully"}), 200
+
 
 if __name__ == '__main__':
     app.run(debug=True)
